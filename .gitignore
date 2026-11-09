@@ -1,0 +1,26 @@
+# ROS 2 Build, Install, and Log artifacts
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Executables & Binaries
+*.exe
+vcxsrv_installer.exe
+
+# OS and Editor temporary files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Log files
+*.log

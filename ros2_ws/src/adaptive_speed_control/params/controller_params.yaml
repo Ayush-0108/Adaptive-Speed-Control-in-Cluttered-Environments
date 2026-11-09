@@ -1,0 +1,23 @@
+adaptive_speed_controller:
+  ros__parameters:
+    max_linear_velocity: 0.50
+    min_linear_velocity: 0.08
+    critical_distance: 0.35
+    safe_distance: 1.50
+    clutter_eval_radius: 2.00
+    clutter_penalty_weight: 0.65
+    min_clutter_factor: 0.25
+    angular_speed_penalty: 1.20
+    max_linear_accel: 0.80
+    max_linear_decel: 2.20
+    control_rate_hz: 50.0
+    front_wedge_angle_deg: 35.0
+
+clutter_navigator:
+  ros__parameters:
+    nominal_speed: 0.45
+    turn_speed: 0.80
+    obstacle_threshold: 1.10
+    critical_turn_dist: 0.50
+    mode: "adaptive"
+    loop_rate_hz: 20.0
