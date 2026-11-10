@@ -10,8 +10,6 @@ set -e
 
 # 1. Terminate any lingering background Gazebo/ROS instances
 killall -q -9 gz ruby parameter_bridge adaptive_speed_controller clutter_navigator speed_telemetry_hud rviz2 2>/dev/null || true
-pkill -9 -f "Xvnc :1" 2>/dev/null || true
-pkill -9 -f "websockify.*6080" 2>/dev/null || true
 sleep 1
 
 # 2. Source ROS 2 Jazzy and local overlay workspace
