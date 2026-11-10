@@ -1,0 +1,279 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="multiroom_house">
+    <!-- Physics parameters -->
+    <physics type="ode">
+      <real_time_update_rate>1000.0</real_time_update_rate>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>150</iters>
+          <sor>1.4</sor>
+        </solver>
+        <constraints>
+          <cfm>0.00001</cfm>
+          <erp>0.2</erp>
+        </constraints>
+      </ode>
+    </physics>
+
+    <!-- Essential Gazebo Sim Systems -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics" />
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands" />
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster" />
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu" />
+
+    <!-- Lighting -->
+    <light type="directional" name="sun">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 15 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.2 -1.0</direction>
+    </light>
+
+    <!-- Ground Plane (Floor) -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>24 20</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>24 20</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.85 0.85 0.88 1.0</ambient>
+            <diffuse>0.85 0.85 0.88 1.0</diffuse>
+            <specular>0.1 0.1 0.1 1.0</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- EXTERIOR WALLS (14m x 10m Apartment Boundary) -->
+    <!-- North Wall -->
+    <model name="wall_exterior_north">
+      <static>true</static>
+      <pose>0 5.0 1.0 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>14.2 0.2 2.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>14.2 0.2 2.0</size></box></geometry>
+          <material><ambient>0.25 0.28 0.35 1</ambient><diffuse>0.25 0.28 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- South Wall -->
+    <model name="wall_exterior_south">
+      <static>true</static>
+      <pose>0 -5.0 1.0 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>14.2 0.2 2.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>14.2 0.2 2.0</size></box></geometry>
+          <material><ambient>0.25 0.28 0.35 1</ambient><diffuse>0.25 0.28 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- East Wall -->
+    <model name="wall_exterior_east">
+      <static>true</static>
+      <pose>7.0 0 1.0 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.2 10.2 2.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.2 10.2 2.0</size></box></geometry>
+          <material><ambient>0.25 0.28 0.35 1</ambient><diffuse>0.25 0.28 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- West Wall -->
+    <model name="wall_exterior_west">
+      <static>true</static>
+      <pose>-7.0 0 1.0 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.2 10.2 2.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.2 10.2 2.0</size></box></geometry>
+          <material><ambient>0.25 0.28 0.35 1</ambient><diffuse>0.25 0.28 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- INTERIOR WALLS & ROOM PARTITIONS -->
+
+    <!-- Main Hallway Wall (separates Left Rooms from Right Rooms) -->
+    <!-- Segment North: from y=5 to y=1.2 (doorway at y=0) -->
+    <model name="hallway_wall_north">
+      <static>true</static>
+      <pose>0 3.0 1.0 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.15 3.8 2.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.15 3.8 2.0</size></box></geometry>
+          <material><ambient>0.7 0.72 0.75 1</ambient><diffuse>0.7 0.72 0.75 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Segment South: from y=-1.2 to y=-5.0 -->
+    <model name="hallway_wall_south">
+      <static>true</static>
+      <pose>0 -3.1 1.0 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.15 3.6 2.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.15 3.6 2.0</size></box></geometry>
+          <material><ambient>0.7 0.72 0.75 1</ambient><diffuse>0.7 0.72 0.75 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Room Divider West (Between Living Room and Bedroom 1) -->
+    <!-- From x=-7 to x=-1.2 (doorway into hallway) -->
+    <model name="partition_west">
+      <static>true</static>
+      <pose>-4.1 0 1.0 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>5.6 0.15 2.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>5.6 0.15 2.0</size></box></geometry>
+          <material><ambient>0.7 0.72 0.75 1</ambient><diffuse>0.7 0.72 0.75 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Room Divider East (Between Kitchen/Dining and Bedroom 2) -->
+    <!-- From x=1.2 to x=7 (doorway into hallway) -->
+    <model name="partition_east">
+      <static>true</static>
+      <pose>4.1 0 1.0 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>5.6 0.15 2.0</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>5.6 0.15 2.0</size></box></geometry>
+          <material><ambient>0.7 0.72 0.75 1</ambient><diffuse>0.7 0.72 0.75 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- FURNITURE OBSTACLES -->
+
+    <!-- Living Room (South-West): Sofa, Coffee Table, TV Stand -->
+    <model name="furniture_sofa">
+      <static>true</static>
+      <pose>-5.0 -3.8 0.4 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>2.2 0.9 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>2.2 0.9 0.8</size></box></geometry>
+          <material><ambient>0.2 0.45 0.65 1</ambient><diffuse>0.2 0.45 0.65 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="furniture_coffee_table">
+      <static>true</static>
+      <pose>-5.0 -2.3 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.2 0.7 0.5</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.2 0.7 0.5</size></box></geometry>
+          <material><ambient>0.5 0.3 0.15 1</ambient><diffuse>0.5 0.3 0.15 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Bedroom 1 (North-West): Bed and Desk -->
+    <model name="furniture_bed_1">
+      <static>true</static>
+      <pose>-5.2 3.6 0.35 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>2.0 1.6 0.7</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>2.0 1.6 0.7</size></box></geometry>
+          <material><ambient>0.3 0.6 0.4 1</ambient><diffuse>0.3 0.6 0.4 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="furniture_desk_1">
+      <static>true</static>
+      <pose>-2.0 4.2 0.4 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.4 0.7 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.4 0.7 0.8</size></box></geometry>
+          <material><ambient>0.5 0.3 0.15 1</ambient><diffuse>0.5 0.3 0.15 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Kitchen / Dining (South-East): Dining Table & Chairs -->
+    <model name="furniture_dining_table">
+      <static>true</static>
+      <pose>4.2 -2.8 0.4 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.8 1.1 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.8 1.1 0.8</size></box></geometry>
+          <material><ambient>0.8 0.4 0.1 1</ambient><diffuse>0.8 0.4 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="furniture_kitchen_counter">
+      <static>true</static>
+      <pose>6.2 -3.0 0.45 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.9 2.8 0.9</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.9 2.8 0.9</size></box></geometry>
+          <material><ambient>0.3 0.3 0.35 1</ambient><diffuse>0.3 0.3 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Bedroom 2 (North-East): Bed, Bookshelf -->
+    <model name="furniture_bed_2">
+      <static>true</static>
+      <pose>5.0 3.6 0.35 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>2.0 1.6 0.7</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>2.0 1.6 0.7</size></box></geometry>
+          <material><ambient>0.6 0.25 0.35 1</ambient><diffuse>0.6 0.25 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="furniture_bookshelf">
+      <static>true</static>
+      <pose>2.0 4.5 0.9 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.2 0.4 1.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.2 0.4 1.8</size></box></geometry>
+          <material><ambient>0.4 0.25 0.15 1</ambient><diffuse>0.4 0.25 0.15 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

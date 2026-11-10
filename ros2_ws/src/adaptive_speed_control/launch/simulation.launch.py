@@ -38,8 +38,9 @@ def generate_launch_description():
     start_navigator = LaunchConfiguration('start_navigator', default='true')
     nav_mode = LaunchConfiguration('mode', default='adaptive')
     use_rviz = LaunchConfiguration('use_rviz', default='true')
+    default_world = os.path.join(pkg_adaptive, 'worlds', 'cluttered_arena.world')
+    world = LaunchConfiguration('world', default=default_world)
 
-    world_path = os.path.join(pkg_adaptive, 'worlds', 'cluttered_arena.world')
     params_path = os.path.join(pkg_adaptive, 'params', 'controller_params.yaml')
     rviz_config_path = os.path.join(pkg_adaptive, 'rviz', 'adaptive_speed.rviz')
 
@@ -55,10 +56,10 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
-        launch_arguments={
-            'gz_args': f'-r -v2 --render-engine-gui ogre {world_path}',
-            'on_exit_shutdown': 'true'
-        }.items()
+        launch_arguments=[
+            ('gz_args', ['-r -v2 --render-engine-gui ogre ', world]),
+            ('on_exit_shutdown', 'true')
+        ]
     )
 
     # 3. Robot State Publisher
@@ -129,6 +130,7 @@ def generate_launch_description():
     ld.add_action(DeclareLaunchArgument('start_navigator', default_value='true', description='Start autonomous navigation node'))
     ld.add_action(DeclareLaunchArgument('mode', default_value='adaptive', description='Navigation mode: adaptive or fixed'))
     ld.add_action(DeclareLaunchArgument('use_rviz', default_value='true', description='Open RViz2 visualization'))
+    ld.add_action(DeclareLaunchArgument('world', default_value=default_world, description='World SDF file path'))
 
     # Environment
     ld.add_action(set_tb3_model_env)
