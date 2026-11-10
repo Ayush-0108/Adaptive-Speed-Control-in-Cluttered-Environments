@@ -8,8 +8,15 @@
 
 set -e
 
-# 1. Terminate any lingering background Gazebo/ROS instances
-killall -q -9 gz ruby parameter_bridge adaptive_speed_controller clutter_navigator speed_telemetry_hud rviz2 2>/dev/null || true
+# 1. Terminate any lingering background Gazebo/ROS instances to guarantee clean display allocation
+pkill -9 -f "gz sim" 2>/dev/null || true
+pkill -9 -f "rviz2" 2>/dev/null || true
+pkill -9 -f "parameter_bridge" 2>/dev/null || true
+pkill -9 -f "adaptive_speed" 2>/dev/null || true
+pkill -9 -f "clutter_navigator" 2>/dev/null || true
+pkill -9 -f "speed_telemetry" 2>/dev/null || true
+pkill -9 -f "ros2 launch" 2>/dev/null || true
+killall -q -9 gz ruby rviz2 parameter_bridge 2>/dev/null || true
 sleep 1
 
 # 2. Source ROS 2 Jazzy and local overlay workspace
